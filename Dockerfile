@@ -4,7 +4,8 @@
 
 # Specify a build image
 FROM node:15-slim
-
+COPY change-mirror.sh .
+RUN sh ./change-mirror.sh
 # Install build tools
 RUN apt-get update -y && apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
@@ -12,14 +13,16 @@ RUN apt-get update -y && apt-get install -y build-essential libcairo2-dev libpan
 WORKDIR /usr/app
 
 # Install NPM packages individually
-RUN npm install express
-RUN npm install multer
-RUN npm install express-list-endpoints
-RUN npm install --build-from-source canvas 
-RUN npm install face-api.js@0.21.0
-RUN npm install @tensorflow/tfjs-node@1.2.11
+COPY ./package.json /usr/app/package.json
+RUN npm install
+#RUN npm install express
+#RUN npm install multer
+#RUN npm install express-list-endpoints
+#RUN npm install --build-from-source canvas
+#RUN npm install face-api.js@0.21.0
+#RUN npm install @tensorflow/tfjs-node@1.2.11
 
-# Setup the environmental varibles 
+# Setup the environmental varibles
 ENV PORT=1890
 ENV USE_TF='true'
 ENV WEIGHTS_PATH='./weights'
